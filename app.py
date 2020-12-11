@@ -4,7 +4,8 @@ app = Flask(__name__)
 
 from pymongo import MongoClient
 
-client = MongoClient('localhost', 27017)
+# client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://test:test@localhost',27017)
 db = client.dbhomework
 
 
@@ -30,7 +31,7 @@ def save_order():
     }
     db.orders.insert_one(doc)
 
-    return jsonify({'result': 'success', 'msg': '주문이 완료되었습니다!'})
+    return jsonify({'result': 'success', 'msg': '주문 완료!'})
 
 
 # 주문 목록보기(Read) API
