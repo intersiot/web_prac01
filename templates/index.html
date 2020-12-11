@@ -1,10 +1,11 @@
-<!doctype html>
-<html lang="ko">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--  og tag  -->
+    <meta property="og:title" content="나만의 쇼핑몰"/>
+    <meta property="og:description" content="이것은 아디다스 스탠스미스"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimage.jpg') }}"/>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -20,145 +21,76 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
 
-    <title>원페이지쇼핑몰</title>
+    <!--    web font link-->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <title>나만의 쇼핑몰</title>
 
     <style>
         * {
-            font-family: 'Do Hyeon', sans-serif;
-        }
-
-        .myitem {
-            width: 500px;
-            height: 300px;
-
-            background-image: url("https://t1.daumcdn.net/liveboard/nts/5bcccfbd33da4865817b9c606b6b852e.JPG");
-            background-position: center;
-            background-size: cover;
-        }
-
-        .price {
-            font-size: 16px;
-        }
-
-        .desc {
-            width: 500px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
-        .order-box {
-            width: 500px;
-            margin-bottom: 40px;
-        }
-
-        .mybtn {
-            width: 100px;
-            margin: auto;
-            display: block;
+            font-family: 'Noto Sans KR', sans-serif;
         }
 
         .wrap {
+            width: 700px;
             margin: auto;
-            width: 500px;
+        }
+
+        .image {
+            width: 600px;
+            height: 600px;
+            background-image: url("https://contents.lotteon.com/itemimage/LO/10/01/23/16/07/_1/00/12/31/60/8/LO1001231607_1001231608_1.jpg/dims/resizef/554X554");
+            background-position: center;
+            background-size: cover;
+            margin: auto;
+        }
+
+        h5, p {
+            padding: 10px;
+            margin: 0 10px;
+        }
+
+        h5, .price {
+            display: inline-block;
+            margin: 10px;
+        }
+
+        h5 {
+            font-weight: bold;
+        }
+
+        .order-box {
+            margin: 0 20px 20px;
+        }
+
+        .order-list {
+            margin: 20px;
         }
 
         .rate {
             color: blue;
+            font-style: italic;
         }
     </style>
-    <script>
 
-        $(document).ready(function () {
-            $.ajax({
-                type: "GET",
-                url: "https://api.manana.kr/exchange/rate.json",
-                data: {},
-                success: function (response) {
-                    let nowRate = response[1]['rate'];
-                    $('#rate-box').text(nowRate);
-                }
-            })
-            order_listing();
-        });
-
-        function order_listing() {
-            // 여기에 ajax 요청을 넣으세요 (주문목록 보기 API 연결)
-            $.ajax({
-                type: "GET",
-                url: "/order",
-                data: {},
-                success: function (response) {
-                    if (response["result"] == "success") {
-                        // orders라는 변수에 list 전체값을 받는다.
-                        let orders = response['orders'];
-                        for (let i = 0; i < orders.length; i++) {
-                            let name = orders[i]['name'];
-                            let count = orders[i]['count'];
-                            let address = orders[i]['address'];
-                            let phone = orders[i]['phone'];
-
-                            console.log(name, count, address, phone)
-
-                            let temp_html = `<tr>
-                                                <th scope="row">${name}</th>
-                                                <td>${count}</td>
-                                                <td>${address}</td>
-                                                <td>${phone}</td>
-                                            </tr>`
-                            $('#order-list-box').append(temp_html)
-                        }
-                    }
-                }
-            })
-        }
-
-        function order() {
-            let name = $('#order-name').val();
-            let count = $('#order-count').val();
-            let address = $('#order-address').val();
-            let phone = $('#order-phone').val();
-
-            if (name == '') {
-                alert('이름을 입력하세요');
-            } else if (count == '-- 수량을 선택하세요 --') {
-                alert('수량을 입력하세요');
-            } else if (address == '') {
-                alert('주소를 입력하세요');
-            } else if (phone == '') {
-                alert('전화번호를 입력하세요');
-            } else {
-                // 여기에 ajax 요청을 넣으세요 (주문하기 API 연결)
-                $.ajax({
-                    type: "POST",
-                    url: "/order",
-                    data: {name_give: name, count_give: count, address_give: address, phone_give: phone},
-                    success: function (response) {
-                        if (response["result"] == "success") {
-                            alert(response["msg"]);
-                            window.location.reload();
-                        }
-                    }
-                })
-            }
-        }
-    </script>
 </head>
-
 <body>
 <div class="wrap">
-    <div class="myitem"></div>
-    <div class="desc">
-        <h1>양초를 팝니다 <span class="price">가격:3,000원/개</span></h1>
-        <p>이 양초는 특별한 힘을 가지고 있습니다. 하나 두 개 켜 놓으면 또 다른 촛불을 찾을 수 있죠!</p>
-
-        <p class="rate">달러-원 환율: <span id="rate-box">1,000</span></p>
-    </div>
+    <!--  이미지  -->
+    <div class="image"></div>
+    <hr/>
+    <!--  상품설명  -->
+    <h5>아디다스 오리지널 스탠 스미스</h5>
+    <p class="price">가격: 109,000원 / 개</p>
+    <p>코트를 지배한 챔피언의 이름을 딴 테니스화, 스탠 스미스는 스트리트웨어의 제왕으로 진화하며 지금까지 큰 사랑을 받고 있습니다. 오리지널 1972년 모델의 정수를 담아낸 클래식 슈즈를 만나보세요.
+        미니멀리스트 가죽 구조와 깔끔한 시그니처 트리밍이 심플하고 세련된 룩을 선사합니다.</p>
+    <p class="rate">&#36; 달러-원 환율 : <span id="now-rate">현재환율값</span></p>
+    <!--  주문하기  -->
+    <h5>주문하기</h5>
     <div class="order-box">
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">주문자이름</span>
+                <span class="input-group-text">주문자이름</span>
             </div>
             <input id="order-name" type="text" class="form-control" aria-label="Default"
                    aria-describedby="inputGroup-sizing-default">
@@ -176,22 +108,26 @@
         </div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">주소</span>
+                <span class="input-group-text">주소</span>
             </div>
             <input id="order-address" type="text" class="form-control" aria-label="Default"
                    aria-describedby="inputGroup-sizing-default">
         </div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">전화번호</span>
+                <span class="input-group-text">전화번호</span>
             </div>
             <input id="order-phone" type="text" class="form-control" aria-label="Default"
                    aria-describedby="inputGroup-sizing-default">
+            <!--       number로 하면 숫자 카운트 하는 커서가 나타남. 전화번호 용도로는 알맞지 않음.         -->
         </div>
-        <button onclick="order()" type="button" class="btn btn-primary mybtn">주문하기</button>
+        <!--    버튼    -->
+        <div class="form-group text-center">
+            <button onclick="order()" type="submit" class="btn btn-primary">주문하기</button>
+        </div>
     </div>
     <div class="order-list">
-        <table class="table table-hover">
+        <table class="table table-striped">
             <thead>
             <tr>
                 <th scope="col">이름</th>
@@ -199,7 +135,7 @@
                 <th scope="col">주소</th>
                 <th scope="col">전화번호</th>
             </tr>
-           </thead>
+            </thead>
             <tbody id="order-list-box">
             </tbody>
         </table>
@@ -207,4 +143,87 @@
 </div>
 </body>
 
+<script>
+    <!--  로딩되지마자 실행되도록 하는 함수  -->
+    $(document).ready(function () {
+        get_rate()
+        order_listing()
+    })
+
+    // 환율API 사용하는 함수
+    function get_rate() {
+        $.ajax({
+            type: "GET",
+            url: "https://api.manana.kr/exchange/rate.json",
+            data: {},
+            success: function (response) {
+                let rate_usd = response[1]['rate']
+                $('#now-rate').text(rate_usd)
+            }
+        })
+    }
+
+    function order_listing() {
+        // 여기에 ajax 요청을 넣으세요 (주문목록 보기 API 연결)
+        $.ajax({
+            type: "GET",
+            url: "/order",
+            data: {},
+            success: function (response) {
+                if (response["result"] == "success") {
+                    let orders = response['orders'];
+                    for (let i = 0; i < orders.length; i++) {
+                        let name = orders[i]['name'];
+                        let count = orders[i]['count'];
+                        let address = orders[i]['address'];
+                        let phone = orders[i]['phone'];
+
+                        let temp_html = `<tr>
+                                            <th scope="row">${name}</th>
+                                            <td>${count}</td>
+                                            <td>${address}</td>
+                                            <td>${phone}</td>
+                                        </tr>`
+                        $('#order-list-box').append(temp_html);
+                        console.log(name, count, address, phone);
+                    }
+                } else {
+                    alert('주문 리스트를 받아오지 못했습니다.');
+                }
+            }
+        })
+    }
+
+    function order() {
+        // 입력받은 값 가져오기
+        let name = $('#order-name').val();
+        let count = $('#order-count').val();
+        let address = $('#order-address').val();
+        let phone = $('#order-phone').val();
+
+        // if문 사용해서 조건 주기
+        if (name == '') {
+            alert('이름을 입력하세요.')
+        } else if (count == '-- 수량을 선택하세요 --') {
+            alert('수량을 선택하세요.')
+        } else if (address == '') {
+            alert('주소를 입력하세요.')
+        } else if (phone == '') {
+            alert('전화번호를 입력하세요.')
+        } else {
+            // 여기에 ajax 요청을 넣으세요 (주문하기 API 연결)
+            $.ajax({
+                type: "POST",
+                url: "/order",
+                data: {name_give: name, count_give: count, address_give: address, phone_give: phone},
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"]);
+                        window.location.reload();
+                    }
+                }
+            })
+        }
+    }
+</script>
 </html>
